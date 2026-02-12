@@ -1,0 +1,14 @@
+package com.example.demo.service;
+
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+import com.example.demo.DTO.custContactInfoDTO;
+
+public interface CustomerContactInfoService {
+
+    ResponseEntity<custContactInfoDTO> add(custContactInfoDTO dto);
+
+    ResponseEntity<List<custContactInfoDTO>> getAll();
+
+    ResponseEntity<custContactInfoDTO> update(Long id, custContactInfoDTO dto);
+}
