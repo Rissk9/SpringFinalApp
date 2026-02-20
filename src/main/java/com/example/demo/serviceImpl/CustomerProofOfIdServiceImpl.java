@@ -1,6 +1,7 @@
 package com.example.demo.serviceImpl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class CustomerProofOfIdServiceImpl implements CustomerProofOfIdService {
         List<custProofOfIdDTO> list =
                 repo.findAll()
                     .stream()
+                    .filter(c->Objects.equals('D', c.getCrudval())==false)
                     .map(e -> {
                         custProofOfIdDTO dto = new custProofOfIdDTO();
                         dto.setCustomerProofId(e.getCustomerProofId());
@@ -74,21 +76,43 @@ public class CustomerProofOfIdServiceImpl implements CustomerProofOfIdService {
 
     // ---------------- PUT ----------------
     @Override
-    public ResponseEntity<custProofOfIdDTO> update(Long id, custProofOfIdDTO dto) {
+    public ResponseEntity<?> update(Long id, custProofOfIdDTO dto) {
 
         CustomerProofofId existing = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Proof id not found"));
 
+        if(Objects.equals('D', existing.getCrudval())==false) {
+        	
         existing.setProofofIdType(dto.getProofofIdType());
         existing.setProofofIdValue(dto.getProofofIdValue());
         existing.setEffectivDate(dto.getEffectivDate());
         existing.setStartDate(dto.getStartDate());
         existing.setEndDate(dto.getEndDate());
 
+        existing.setCrudval('U');
         repo.save(existing);
 
         dto.setCustomerProofId(existing.getCustomerProofId());
 
         return ResponseEntity.ok(dto);
+        }
+        else {
+			return new ResponseEntity<String>("Element already deleted",HttpStatus.BAD_REQUEST);
+		}
     }
+
+	@Override
+	public ResponseEntity<?> delete(Long id) {
+		
+		CustomerProofofId proofofId=repo.findById(id).orElseThrow(()->new RuntimeException("Id not found"));
+		
+		if(Objects.equals(proofofId.getCrudval(), 'D'))
+			return new ResponseEntity<String>("Element already deleted",HttpStatus.BAD_REQUEST);
+		
+		else {
+			proofofId.setCrudval('D');
+			repo.save(proofofId);
+			return new ResponseEntity<String>("Successfully deleted",HttpStatus.OK);
+		}
+	}
 }

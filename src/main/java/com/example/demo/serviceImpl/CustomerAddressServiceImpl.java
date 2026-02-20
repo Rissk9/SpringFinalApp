@@ -1,6 +1,7 @@
 package com.example.demo.serviceImpl;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,7 @@ public class CustomerAddressServiceImpl implements CustomerAddressService {
         List<custAddressDTO> list =
                 repo.findAll()
                     .stream()
+                    .filter(c->Objects.equals('D', c.getCrudval())==false)
                     .map(e -> {
                         custAddressDTO dto = new custAddressDTO();
                         dto.setCustAddressId(e.getCustAddressId());
@@ -83,14 +85,18 @@ public class CustomerAddressServiceImpl implements CustomerAddressService {
 
     // ---------------- PUT ----------------
     @Override
-    public ResponseEntity<custAddressDTO> update(Long id, custAddressDTO dto) {
+    public ResponseEntity<?> update(Long id, custAddressDTO dto) {
 
         CustomerAddress existing = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
+        if(Objects.equals('D', existing.getCrudval()))
+        	return new ResponseEntity<String>("Element already deleted",HttpStatus.BAD_REQUEST);
+        
         existing.setCustomerAddressType(dto.getAddressType());
         existing.setCustomerAddressValue(dto.getAddressValue());
         existing.setEffectiveDate(dto.getEffectiveDate());
+        existing.setCrudval('U');
 
         repo.save(existing);
 
@@ -98,5 +104,23 @@ public class CustomerAddressServiceImpl implements CustomerAddressService {
 
         return ResponseEntity.ok(dto);
     }
+    
+    //--------------DELETE----------------
+    @Override
+	public ResponseEntity<?> delete(Long id) {
+		
+    	CustomerAddress address=repo.findById(id).orElseThrow(()->new RuntimeException("Id not present"));
+    	
+    	if(Objects.equals('D', address.getCrudval())==false) {
+    		address.setCrudval('D');
+    		repo.save(address);
+    		return new ResponseEntity<>("Deleted successfully",HttpStatus.OK);
+
+    	}
+    	else {
+    		return new ResponseEntity<>("Element already deleted",HttpStatus.BAD_REQUEST);
+		}
+	}
+    
 }
 

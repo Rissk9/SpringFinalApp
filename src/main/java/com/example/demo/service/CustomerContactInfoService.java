@@ -10,5 +10,8 @@ public interface CustomerContactInfoService {
 
     ResponseEntity<List<custContactInfoDTO>> getAll();
 
-    ResponseEntity<custContactInfoDTO> update(Long id, custContactInfoDTO dto);
+    ResponseEntity<?> update(Long id, custContactInfoDTO dto);
+    
+    ResponseEntity<?> delete(Long id);
+    
 }

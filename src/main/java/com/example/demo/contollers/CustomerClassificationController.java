@@ -7,6 +7,7 @@ import javax.crypto.interfaces.DHPublicKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,9 +39,14 @@ public class CustomerClassificationController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<custClassifDTO> updatCustomerCLassfication(@PathVariable Long id,@RequestBody custClassifDTO cType){
+	public ResponseEntity<?> updatCustomerCLassfication(@PathVariable Long id,@RequestBody custClassifDTO cType){
 	
 		return classificationServiceImpl.updateClassification(id,cType);
 	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deletingClassification(@PathVariable Long id) {
+		return classificationServiceImpl.deleteClassification(id);
+	} 
 
 }

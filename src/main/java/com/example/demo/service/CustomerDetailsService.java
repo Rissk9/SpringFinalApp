@@ -15,7 +15,7 @@ public interface CustomerDetailsService {
 
 	ResponseEntity<List<custDetailDTO>> getAllCustomers();
 
-	ResponseEntity<custDetailDTO> updateCustomer(custDetailDTO custbody);
+	ResponseEntity<?> updateCustomer(custDetailDTO custbody);
 	
-	
+	ResponseEntity<?> deleteCustomer(Long custId);
 }

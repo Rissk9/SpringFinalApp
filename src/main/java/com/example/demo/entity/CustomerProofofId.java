@@ -38,7 +38,10 @@ public class CustomerProofofId {
 	
 	@Column(name = "End_Date")
 	private LocalDate endDate;
-
+	
+	@Column(name= "CRUD_Value")
+	private Character crudval='C';
+	
 	
 	public CustomerProofofId(Long customerProofId, CustomerDetail customerDetail_fk_proofofId, String proofofIdType,
 			String proofofIdValue, LocalDate effectivDate, LocalDate startDate, LocalDate endDate) {
@@ -54,6 +57,16 @@ public class CustomerProofofId {
 
 	public CustomerProofofId() {
 		super();
+	}
+
+	
+
+	public Character getCrudval() {
+		return crudval;
+	}
+
+	public void setCrudval(Character crudval) {
+		this.crudval = crudval;
 	}
 
 	public long getCustomerProofId() {

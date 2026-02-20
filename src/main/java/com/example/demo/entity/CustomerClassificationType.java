@@ -33,23 +33,38 @@ public class CustomerClassificationType {
 	@Column(name = "Effective_Date")
 	private LocalDate effectiveDate;
 	
+	@Column(name= "CRUD_Value")
+	private Character crudval='C';
+	
 	// mappedBy contains the column that will contain the primary key of this table so basically the column of the foreign key
 //	@JsonIgnore
 	@JsonIgnore
-	@OneToMany(mappedBy = "classificationType",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "classificationType",cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomerDetail> customerDetails;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "classificationType_FK_Custname", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "classificationType_FK_Custname", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomerName> customerNames;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "customerClassificationType_FK_custAddress", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "customerClassificationType_FK_custAddress", cascade = CascadeType.ALL, orphanRemoval = true)
+	
+	
 	private List<CustomerAddress> customerAddresses;
 	//getters and setters
 	
+	
+
 	public List<CustomerAddress> getCustomerAddresses() {
 		return customerAddresses;
+	}
+
+	public Character getCrudval() {
+		return crudval;
+	}
+
+	public void setCrudval(Character crudval) {
+		this.crudval = crudval;
 	}
 
 	public void setCustomerAddresses(List<CustomerAddress> customerAddresses) {

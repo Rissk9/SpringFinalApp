@@ -12,5 +12,8 @@ public interface CustomerIdentificationService {
 
 	ResponseEntity<List<custIndentifDTO>> getIdentification();
 
-	ResponseEntity<custIndentifDTO> updateIdentification(Long id,custIndentifDTO dto);
+	ResponseEntity<?> updateIdentification(Long id,custIndentifDTO dto);
+
+	ResponseEntity<?> deleteIdentification(Long id);
+
 }

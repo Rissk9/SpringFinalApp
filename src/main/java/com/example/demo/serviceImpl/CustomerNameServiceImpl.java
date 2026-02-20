@@ -1,8 +1,10 @@
 package com.example.demo.serviceImpl;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +56,7 @@ public class CustomerNameServiceImpl implements CustomerNameService {
 
 	    List<custNameDTO> list = repo.findAll()
 	            .stream()
+	            .filter(c->Objects.equals('D', c.getCrudval())!=true)
 	            .map(n -> {
 	                custNameDTO d = new custNameDTO();
 	                d.setCustNameId(n.getCustNameId());
@@ -70,20 +73,41 @@ public class CustomerNameServiceImpl implements CustomerNameService {
 	    return ResponseEntity.ok(list);
 	}
 	
-	public ResponseEntity<custNameDTO> update(Long id, custNameDTO dto) {
+	public ResponseEntity<?> update(Long id, custNameDTO dto) {
 
 	    CustomerName entity = repo.findById(id)
 	            .orElseThrow(() -> new RuntimeException("Name not found"));
 
+	    if(Objects.equals('D', entity.getCrudval())==false) {
 	    entity.setCustomerNameType(dto.getCustomerNameType());
 	    entity.setCustomerNameValue(dto.getCustomerNameValue());
 	    entity.setEffectiveDate(dto.getEffectiveDate());
 
+	    entity.setCrudval('U');
 	    repo.save(entity);
 
 	    dto.setCustNameId(entity.getCustNameId());
 
 	    return ResponseEntity.ok(dto);
+	    }
+	    else {
+			return new ResponseEntity<>("Element already deleted",HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> delete(Long id) {
+		
+		CustomerName name=repo.findById(id).orElseThrow(()->new RuntimeException("ID not found"));
+		
+		if(Objects.equals('D', name.getCrudval())!=true) {
+			name.setCrudval('D');
+			repo.save(name);
+			return new ResponseEntity<>("Deleted successfully",HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>("Element already deleted",HttpStatus.BAD_REQUEST);
+		}
 	}
 
 

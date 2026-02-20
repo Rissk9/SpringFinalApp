@@ -27,9 +27,15 @@ public class CustomerContactInfoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<custContactInfoDTO> update(
+    public ResponseEntity<?> update(
             @PathVariable Long id,
             @RequestBody custContactInfoDTO dto) {
         return service.update(id, dto);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(
+            @PathVariable Long id) {
+        return service.delete(id);
     }
 }

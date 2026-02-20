@@ -2,6 +2,7 @@ package com.example.demo.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -135,6 +136,7 @@ public class CustomerClassificationServiceImpl implements CustomerClassification
 
 	    List<custClassifDTO> list = classificationRepo.findAll()
 	        .stream()
+	        .filter(c->Objects.equals('D', c.getCrudval())==false)	        
 	        .map(classif -> {
 
 	            custClassifDTO dto = new custClassifDTO();
@@ -164,16 +166,20 @@ public class CustomerClassificationServiceImpl implements CustomerClassification
 
 	
 	@Override
-	public ResponseEntity<custClassifDTO> updateClassification(Long id, custClassifDTO dto) {
+	public ResponseEntity<?> updateClassification(Long id, custClassifDTO dto) {
 
 	    CustomerClassificationType existing =
 	            classificationRepo.findById(id)
 	            .orElseThrow(() -> new RuntimeException("Classification not found"));
+	    
+	    if (Objects.equals('D',existing.getCrudval()))
+	    		return new ResponseEntity<String>("Element already deleted", HttpStatus.BAD_REQUEST);
 
 	    // update only own fields
 	    existing.setCustomerClassificationType(dto.getCustomerClassificationType());
 	    existing.setCustomerClassificationValue(dto.getCustomerClassificationValue());
 	    existing.setEffectiveDate(dto.getEffectiveDate());
+	    existing.setCrudval('U');
 
 	    CustomerClassificationType saved = classificationRepo.save(existing);
 
@@ -184,8 +190,28 @@ public class CustomerClassificationServiceImpl implements CustomerClassification
 	    response.setCustomerClassificationValue(saved.getCustomerClassificationValue());
 	    response.setEffectiveDate(saved.getEffectiveDate());
 
+	    
 	    return ResponseEntity.ok(response);
 	}
+
+	@Override
+	public ResponseEntity<String> deleteClassification(Long id) {
+		
+		if(classificationRepo.existsById(id)!=true)
+			return new ResponseEntity<String>("Classification ID Not present",HttpStatus.NOT_FOUND);
+		
+		CustomerClassificationType customerClassificationType=classificationRepo.findById(id).orElseThrow(()->new RuntimeException("Id not found"));
+		if(Objects.equals(customerClassificationType.getCrudval(), 'D')
+)
+			return new ResponseEntity<String>("Classification already deleted",HttpStatus.BAD_REQUEST);
+
+		customerClassificationType.setCrudval('D');
+		classificationRepo.save(customerClassificationType);
+		return new ResponseEntity<String>("Deleted successfully",HttpStatus.OK);
+
+	}
+	
+	
 	
 
 	

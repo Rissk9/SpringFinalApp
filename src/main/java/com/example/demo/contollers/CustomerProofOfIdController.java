@@ -30,9 +30,14 @@ public class CustomerProofOfIdController {
 
     // PUT
     @PutMapping("/{id}")
-    public ResponseEntity<custProofOfIdDTO> update(
+    public ResponseEntity<?> update(
             @PathVariable Long id,
             @RequestBody custProofOfIdDTO dto) {
         return service.update(id, dto);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        return service.delete(id);
     }
 }

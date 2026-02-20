@@ -45,24 +45,27 @@ public class CustomerDetail {
 	@Column(name = "Customer_CountryOfOrigin")
 	private String cust_country;
 	
+	@Column(name= "CRUD_Value")
+	private Character crudval='C';
+	
 	@ManyToOne
 	@JoinColumn(name="Customer_Classification_Id", nullable = false)
 	private CustomerClassificationType classificationType;
 	
 
-	@OneToOne(mappedBy = "customerDetail_FK", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "customerDetail_FK", cascade = CascadeType.ALL, orphanRemoval = true)
 	private CustomerIdentification customerIdentification;
 	
-	@OneToMany(mappedBy = "customerDetail_FK_Custname", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "customerDetail_FK_Custname", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomerName> customerNames;
 	
-	@OneToMany(mappedBy = "customerDetail_fk_proofofId", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "customerDetail_fk_proofofId", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomerProofofId> customerProofofIds;
 	
-	@OneToMany(mappedBy = "customerDetail_FK_custContact",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "customerDetail_FK_custContact",cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomerContactInformation> customerContactInformations;
 	
-	@OneToMany(mappedBy = "customerDetail_FK_custAddress", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "customerDetail_FK_custAddress", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomerAddress> customerAddresses;
 	
 	
@@ -108,9 +111,23 @@ public class CustomerDetail {
 	
 	//--------------------------------Getters and setters---------------------------------------------
 	
+	
 	public List<CustomerContactInformation> getCustomerContactInformations() {
 		return customerContactInformations;
 	}
+
+
+	public Character getCrudval() {
+		return crudval;
+	}
+
+
+
+	public void setCrudval(Character crudval) {
+		this.crudval = crudval;
+	}
+
+
 
 	public void setCustomerContactInformations(List<CustomerContactInformation> customerContactInformations) {
 		this.customerContactInformations = customerContactInformations;

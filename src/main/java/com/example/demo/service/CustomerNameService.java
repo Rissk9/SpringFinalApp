@@ -12,5 +12,7 @@ public interface CustomerNameService {
 
     ResponseEntity<List<custNameDTO>> getAll();
 
-    ResponseEntity<custNameDTO> update(Long id, custNameDTO dto);
+    ResponseEntity<?> update(Long id, custNameDTO dto);
+
+	ResponseEntity<?> delete(Long id);
 }

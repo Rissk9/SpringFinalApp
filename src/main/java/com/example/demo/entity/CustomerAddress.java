@@ -38,6 +38,10 @@ public class CustomerAddress {
 	@Column(name = "Effective_Date")
 	private LocalDate effectiveDate;
 
+	@Column(name= "CRUD_Value")
+	private Character crudval='C';
+	
+	
 	
 	public CustomerAddress() {
 		super();
@@ -53,6 +57,20 @@ public class CustomerAddress {
 		CustomerAddressType = customerAddressType;
 		CustomerAddressValue = customerAddressValue;
 		this.effectiveDate = effectiveDate;
+	}
+
+	
+	
+	
+
+	
+
+	public Character getCrudval() {
+		return crudval;
+	}
+
+	public void setCrudval(Character crudval) {
+		this.crudval = crudval;
 	}
 
 	public Long getCustAddressId() {

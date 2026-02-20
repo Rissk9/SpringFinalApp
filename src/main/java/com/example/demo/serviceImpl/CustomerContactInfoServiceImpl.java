@@ -1,6 +1,7 @@
 package com.example.demo.serviceImpl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class CustomerContactInfoServiceImpl implements CustomerContactInfoServic
         List<custContactInfoDTO> list =
                 repo.findAll()
                     .stream()
+                    .filter(c->(Objects.equals('D', c.getCrudval())!=true))	       
                     .map(e -> {
                         custContactInfoDTO dto = new custContactInfoDTO();
                         dto.setCustContactId(e.getCustContactId());
@@ -74,21 +76,40 @@ public class CustomerContactInfoServiceImpl implements CustomerContactInfoServic
 
     // ---------------- PUT ----------------
     @Override
-    public ResponseEntity<custContactInfoDTO> update(Long id, custContactInfoDTO dto) {
+    public ResponseEntity<?> update(Long id, custContactInfoDTO dto) {
 
         CustomerContactInformation existing = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contact id not found"));
 
+        if(existing.getCrudval()!='D') {
         existing.setCustomerContactType(dto.getCustomerContactType());
         existing.setCustomerContactValue(dto.getCustomerContactValue());
         existing.setEffectiveDate(dto.getEffectiveDate());
         existing.setStartDate(dto.getStartDate());
         existing.setEndDate(dto.getEndDate());
 
+        existing.setCrudval('U');
         repo.save(existing);
 
         dto.setCustContactId(existing.getCustContactId());
-
+        }
+        else {
+			return new ResponseEntity<String>("Element has been deleted",HttpStatus.BAD_REQUEST);
+		}
         return ResponseEntity.ok(dto);
+
     }
+
+	@Override
+	public ResponseEntity<?> delete(Long id) {
+		
+		CustomerContactInformation contactInformation=repo.findById(id).orElseThrow(()-> new RuntimeException("Id Not found"));
+		if(contactInformation.getCrudval()=='D')
+			return new ResponseEntity<String>("Element has been deleted",HttpStatus.BAD_REQUEST);
+		
+		contactInformation.setCrudval('D');
+		repo.save(contactInformation);
+		return new ResponseEntity<String>("Successfully deleted",HttpStatus.OK);
+
+	}
 }

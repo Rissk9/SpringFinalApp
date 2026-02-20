@@ -1,10 +1,12 @@
 package com.example.demo.contollers;
 
 import java.util.List;
-
+import com.example.demo.serviceImpl.custDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,8 @@ import com.example.demo.service.CustomerDetailsService;
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerDetailController {
+
+//    private final serviceImpl.custDetailsServiceImpl custDetailsServiceImpl;
 
 	@Autowired
 	CustomerDetailsService custDetailService;
@@ -34,12 +38,15 @@ public class CustomerDetailController {
 	}
 	
 	
-	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?>deleteByid(@PathVariable Long id){
+		return custDetailService.deleteCustomer(id);
+	}
 	
 	
 	
 	@PutMapping
-	public ResponseEntity<custDetailDTO> updatecustomers(@RequestBody custDetailDTO custbody){
+	public ResponseEntity<?> updatecustomers(@RequestBody custDetailDTO custbody){
 		return custDetailService.updateCustomer(custbody);
 	}
 }

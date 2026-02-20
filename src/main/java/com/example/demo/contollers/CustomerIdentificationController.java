@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,8 +34,12 @@ public class CustomerIdentificationController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<custIndentifDTO> putIdentification(@PathVariable Long id,@RequestBody custIndentifDTO dto){
+	public ResponseEntity<?> putIdentification(@PathVariable Long id,@RequestBody custIndentifDTO dto){
 		return identificationService.updateIdentification(id, dto);
 	}
 	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> putIdentification(@PathVariable Long id){
+		return identificationService.deleteIdentification(id);
+	}
 }

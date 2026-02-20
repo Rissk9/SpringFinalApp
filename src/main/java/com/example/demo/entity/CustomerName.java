@@ -36,6 +36,21 @@ public class CustomerName {
 	
 	@Column(name = "effective_date")
     private LocalDate effectiveDate;
+	
+	@Column(name= "CRUD_Value")
+	private Character crudval='C';
+	
+	
+
+	
+
+	public Character getCrudval() {
+		return crudval;
+	}
+
+	public void setCrudval(Character crudval) {
+		this.crudval = crudval;
+	}
 
 	public Long getCustNameId() {
 		return custNameId;

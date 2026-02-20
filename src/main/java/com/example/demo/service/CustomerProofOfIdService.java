@@ -10,5 +10,8 @@ public interface CustomerProofOfIdService {
 
     ResponseEntity<List<custProofOfIdDTO>> getAll();
 
-    ResponseEntity<custProofOfIdDTO> update(Long id, custProofOfIdDTO dto);
+    ResponseEntity<?> update(Long id, custProofOfIdDTO dto);
+    
+    ResponseEntity<?> delete(Long id);
+
 }

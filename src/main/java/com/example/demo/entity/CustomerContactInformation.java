@@ -38,6 +38,31 @@ public class CustomerContactInformation {
 	
 	@Column(name = "End_Date")
 	private LocalDate endDate;
+	
+	@Column(name= "CRUD_Value")
+	private Character crudval='C';
+
+	
+	
+	public CustomerDetail getCustomerDetail_FK_custContact() {
+		return customerDetail_FK_custContact;
+	}
+
+	public void setCustomerDetail_FK_custContact(CustomerDetail customerDetail_FK_custContact) {
+		this.customerDetail_FK_custContact = customerDetail_FK_custContact;
+	}
+
+	public Character getCrudval() {
+		return crudval;
+	}
+
+	public void setCrudval(Character crudval) {
+		this.crudval = crudval;
+	}
+
+	public void setCrudval(char crudval) {
+		this.crudval = crudval;
+	}
 
 	public Long getCustContactId() {
 		return custContactId;

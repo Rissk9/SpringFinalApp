@@ -12,5 +12,7 @@ public interface CustomerClassificationService {
 	
 	public ResponseEntity<List<custClassifDTO>> getAllClassifications();
 	
-	public ResponseEntity<custClassifDTO> updateClassification(Long id,custClassifDTO c);
+	public ResponseEntity<?> updateClassification(Long id,custClassifDTO c);
+	
+	public ResponseEntity<String> deleteClassification(Long id);
 }

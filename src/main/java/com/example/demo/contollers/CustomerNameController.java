@@ -28,9 +28,15 @@ public class CustomerNameController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<custNameDTO> update(
+    public ResponseEntity<?> update(
             @PathVariable Long id,
             @RequestBody custNameDTO dto) {
         return service.update(id, dto);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(
+            @PathVariable Long id) {
+        return service.delete(id);
     }
 }
