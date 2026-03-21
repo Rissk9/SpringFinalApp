@@ -11,7 +11,7 @@ import com.example.demo.entity.CustomerDetail;
 
 public interface CustomerDetailsService {
 
-	ResponseEntity<custDetailDTO> addCustomer(custDetailDTO custbody);
+	ResponseEntity<?> addCustomer(custDetailDTO custbody);
 
 	ResponseEntity<List<custDetailDTO>> getAllCustomers();
 

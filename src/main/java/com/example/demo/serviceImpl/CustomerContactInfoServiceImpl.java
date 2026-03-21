@@ -1,6 +1,7 @@
 package com.example.demo.serviceImpl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import com.example.demo.entity.CustomerDetail;
 import com.example.demo.repository.CustomerContactInformationRepo;
 import com.example.demo.repository.CustomerDetailRepo;
 import com.example.demo.service.CustomerContactInfoService;
+import com.example.demo.utils.ContactInfoValidator;
 
 @Service
 public class CustomerContactInfoServiceImpl implements CustomerContactInfoService {
@@ -27,7 +29,13 @@ public class CustomerContactInfoServiceImpl implements CustomerContactInfoServic
 
     // ---------------- POST ----------------
     @Override
-    public ResponseEntity<custContactInfoDTO> add(custContactInfoDTO dto) {
+    public ResponseEntity<?> add(custContactInfoDTO dto) {
+
+        // Validate contact info
+        ResponseEntity<String> validationResponse = ContactInfoValidator.validateToResponse(dto);
+        if (validationResponse != null) {
+            return validationResponse;
+        }
 
         CustomerDetail customer = customerRepo.findById(dto.getCustId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -78,6 +86,12 @@ public class CustomerContactInfoServiceImpl implements CustomerContactInfoServic
     @Override
     public ResponseEntity<?> update(Long id, custContactInfoDTO dto) {
 
+        // Validate contact info
+        ResponseEntity<String> validationResponse = ContactInfoValidator.validateToResponse(dto);
+        if (validationResponse != null) {
+            return validationResponse;
+        }
+
         CustomerContactInformation existing = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contact id not found"));
 
@@ -104,12 +118,13 @@ public class CustomerContactInfoServiceImpl implements CustomerContactInfoServic
 	public ResponseEntity<?> delete(Long id) {
 		
 		CustomerContactInformation contactInformation=repo.findById(id).orElseThrow(()-> new RuntimeException("Id Not found"));
-		if(contactInformation.getCrudval()=='D')
-			return new ResponseEntity<String>("Element has been deleted",HttpStatus.BAD_REQUEST);
+		if(Objects.equals(contactInformation.getCrudval(), 'D'))
+			return new ResponseEntity<>(Map.of("message", "Element has been deleted"), HttpStatus.BAD_REQUEST);
 		
 		contactInformation.setCrudval('D');
 		repo.save(contactInformation);
-		return new ResponseEntity<String>("Successfully deleted",HttpStatus.OK);
+		return new ResponseEntity<>(Map.of("message", "Successfully deleted"), HttpStatus.OK);
 
 	}
+
 }

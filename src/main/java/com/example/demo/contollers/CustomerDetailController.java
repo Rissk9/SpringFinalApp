@@ -27,7 +27,7 @@ public class CustomerDetailController {
 	CustomerDetailsService custDetailService;
 	
 	@PostMapping
-	public ResponseEntity<custDetailDTO> addCustomer(
+	public ResponseEntity<?> addCustomer(
 	        @RequestBody custDetailDTO dto) {
 	    return custDetailService.addCustomer(dto);
 	}

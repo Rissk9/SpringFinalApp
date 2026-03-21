@@ -1,4 +1,4 @@
-
+															
 package com.example.demo.contollers;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class CustomerClassificationController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deletingClassification(@PathVariable Long id) {
+	public ResponseEntity<?> deletingClassification(@PathVariable Long id) {
 		return classificationServiceImpl.deleteClassification(id);
 	} 
 

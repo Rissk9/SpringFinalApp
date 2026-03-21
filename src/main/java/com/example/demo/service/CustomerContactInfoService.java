@@ -6,7 +6,7 @@ import com.example.demo.DTO.custContactInfoDTO;
 
 public interface CustomerContactInfoService {
 
-    ResponseEntity<custContactInfoDTO> add(custContactInfoDTO dto);
+    ResponseEntity<?> add(custContactInfoDTO dto);
 
     ResponseEntity<List<custContactInfoDTO>> getAll();
 

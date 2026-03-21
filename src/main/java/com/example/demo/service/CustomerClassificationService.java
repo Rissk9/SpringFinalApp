@@ -14,5 +14,5 @@ public interface CustomerClassificationService {
 	
 	public ResponseEntity<?> updateClassification(Long id,custClassifDTO c);
 	
-	public ResponseEntity<String> deleteClassification(Long id);
+	public ResponseEntity<?> deleteClassification(Long id);
 }

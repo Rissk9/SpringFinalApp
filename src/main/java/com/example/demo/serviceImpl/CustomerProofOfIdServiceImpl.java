@@ -1,6 +1,7 @@
 package com.example.demo.serviceImpl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -52,24 +53,22 @@ public class CustomerProofOfIdServiceImpl implements CustomerProofOfIdService {
     @Override
     public ResponseEntity<List<custProofOfIdDTO>> getAll() {
 
-        List<custProofOfIdDTO> list =
-                repo.findAll()
-                    .stream()
-                    .filter(c->Objects.equals('D', c.getCrudval())==false)
-                    .map(e -> {
-                        custProofOfIdDTO dto = new custProofOfIdDTO();
-                        dto.setCustomerProofId(e.getCustomerProofId());
-                        dto.setProofofIdType(e.getProofofIdType());
-                        dto.setProofofIdValue(e.getProofofIdValue());
-                        dto.setEffectivDate(e.getEffectivDate());
-                        dto.setStartDate(e.getStartDate());
-                        dto.setEndDate(e.getEndDate());
-                        dto.setCustId(
-                            e.getCustomerDetail_fk_proofofId().getCustomerId()
-                        );
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
+        List<custProofOfIdDTO> list = repo.findAll()
+                .stream()
+                .filter(c -> Objects.equals('D', c.getCrudval()) == false)
+                .map(e -> {
+                    custProofOfIdDTO dto = new custProofOfIdDTO();
+                    dto.setCustomerProofId(e.getCustomerProofId());
+                    dto.setProofofIdType(e.getProofofIdType());
+                    dto.setProofofIdValue(e.getProofofIdValue());
+                    dto.setEffectivDate(e.getEffectivDate());
+                    dto.setStartDate(e.getStartDate());
+                    dto.setEndDate(e.getEndDate());
+                    dto.setCustId(
+                            e.getCustomerDetail_fk_proofofId().getCustomerId());
+                    return dto;
+                })
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(list);
     }
@@ -81,38 +80,37 @@ public class CustomerProofOfIdServiceImpl implements CustomerProofOfIdService {
         CustomerProofofId existing = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Proof id not found"));
 
-        if(Objects.equals('D', existing.getCrudval())==false) {
-        	
-        existing.setProofofIdType(dto.getProofofIdType());
-        existing.setProofofIdValue(dto.getProofofIdValue());
-        existing.setEffectivDate(dto.getEffectivDate());
-        existing.setStartDate(dto.getStartDate());
-        existing.setEndDate(dto.getEndDate());
+        if (Objects.equals('D', existing.getCrudval()) == false) {
 
-        existing.setCrudval('U');
-        repo.save(existing);
+            existing.setProofofIdType(dto.getProofofIdType());
+            existing.setProofofIdValue(dto.getProofofIdValue());
+            existing.setEffectivDate(dto.getEffectivDate());
+            existing.setStartDate(dto.getStartDate());
+            existing.setEndDate(dto.getEndDate());
 
-        dto.setCustomerProofId(existing.getCustomerProofId());
+            existing.setCrudval('U');
+            repo.save(existing);
 
-        return ResponseEntity.ok(dto);
+            dto.setCustomerProofId(existing.getCustomerProofId());
+
+            return ResponseEntity.ok(dto);
+        } else {
+            return new ResponseEntity<>(Map.of("message", "Element already deleted"), HttpStatus.BAD_REQUEST);
         }
-        else {
-			return new ResponseEntity<String>("Element already deleted",HttpStatus.BAD_REQUEST);
-		}
     }
 
-	@Override
-	public ResponseEntity<?> delete(Long id) {
-		
-		CustomerProofofId proofofId=repo.findById(id).orElseThrow(()->new RuntimeException("Id not found"));
-		
-		if(Objects.equals(proofofId.getCrudval(), 'D'))
-			return new ResponseEntity<String>("Element already deleted",HttpStatus.BAD_REQUEST);
-		
-		else {
-			proofofId.setCrudval('D');
-			repo.save(proofofId);
-			return new ResponseEntity<String>("Successfully deleted",HttpStatus.OK);
-		}
-	}
+    @Override
+    public ResponseEntity<?> delete(Long id) {
+
+        CustomerProofofId proofofId = repo.findById(id).orElseThrow(() -> new RuntimeException("Id not found"));
+
+        if (Objects.equals(proofofId.getCrudval(), 'D'))
+            return new ResponseEntity<>(Map.of("message", "Element already deleted"), HttpStatus.BAD_REQUEST);
+
+        else {
+            proofofId.setCrudval('D');
+            repo.save(proofofId);
+            return new ResponseEntity<>(Map.of("message", "Successfully deleted"), HttpStatus.OK);
+        }
+    }
 }

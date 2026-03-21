@@ -1,0 +1,564 @@
+<div class="row justify-content-center">
+    <div class="col-md-11">
+
+        <!-- Header with Title and Section Switching Buttons -->
+        <div
+            class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white shadow-sm rounded border border-primary">
+            <div class="d-flex align-items-center">
+                <h2 class="m-0 me-4">Customer Management Center</h2>
+
+                <!-- Section Switching Buttons -->
+                <div class="btn-group shadow-sm" role="group">
+                    <button type="button" class="btn px-4"
+                        ng-class="activeTab === 'unified' ? 'btn-primary' : 'btn-outline-primary'"
+                        ng-click="setTab('unified')">
+                        Customer Details
+                    </button>
+                    <button type="button" class="btn px-4"
+                        ng-class="activeTab === 'individual' ? 'btn-dark' : 'btn-outline-dark'"
+                        ng-click="setTab('individual')">
+                        Individual Entities
+                    </button>
+                    <button type="button" class="btn px-4"
+                        ng-class="activeTab === 'delete' ? 'btn-danger' : 'btn-outline-danger'"
+                        ng-click="setTab('delete')">
+                        <i class="bi bi-trash"></i> Delete Center
+                    </button>
+                </div>
+            </div>
+            <a href="/" class="btn btn-outline-secondary">Back to Home</a>
+        </div>
+
+        <!-- SECTION 1: UNIFIED CUSTOMER PROFILE -->
+        <div id="unified-section" ng-show="activeTab === 'unified'" class="animate-fade">
+            <div class="card p-4 mb-3 border-primary shadow-sm bg-white">
+                <h4 class="text-primary border-bottom pb-2 mb-4">Customer Details Entry</h4>
+                <p class="text-muted small">Fill all details below for a complete profile creation in a single request.
+                </p>
+
+                <form ng-submit="submitUnifiedForm()">
+                    <!-- 1. Basic Details -->
+                    <div class="section-box border rounded p-3 mb-4 bg-light">
+                        <h5 class="mb-3 text-secondary border-bottom pb-1">Basic Information</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4"><label class="form-label">Full Name</label><input type="text"
+                                    class="form-control" ng-model="customer.custFullname" placeholder="Enter Full Name"
+                                    required></div>
+                            <div class="col-md-4"><label class="form-label">Gender</label><select class="form-select"
+                                    ng-model="customer.custGender" required>
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option value="MALE">MALE</option>
+                                    <option value="FEMALE">FEMALE</option>
+                                    <option value="OTHER">OTHER</option>
+                                </select></div>
+                            <div class="col-md-4"><label class="form-label">Date of Birth (yyyy-MM-dd)</label><input
+                                    type="text" class="form-control" ng-model="customer.custDate"
+                                    placeholder="yyyy-MM-dd" required></div>
+                            <div class="col-md-4"><label class="form-label">Preferred Language</label><input type="text"
+                                    class="form-control" ng-model="customer.custPrefLanguage" placeholder="e.g. EN, ML">
+                            </div>
+                            <div class="col-md-4"><label class="form-label">Status</label><input type="text"
+                                    class="form-control" ng-model="customer.custStatus" placeholder="ACTIVE/INACTIVE">
+                            </div>
+                            <div class="col-md-4"><label class="form-label">Country</label><input type="text"
+                                    class="form-control" ng-model="customer.custCountry" placeholder="e.g. India"></div>
+                            <div class="col-md-4"><label class="form-label">Classification ID</label><input
+                                    type="number" class="form-control" ng-model="customer.classificationId" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Identification -->
+                    <div class="section-box border rounded p-3 mb-4 bg-white">
+                        <h5 class="mb-3 text-secondary border-bottom pb-1">Identification</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4"><label class="form-label">ID Type</label><input type="text"
+                                    class="form-control" ng-model="customer.identification.custIdentificationtype"
+                                    placeholder="e.g. VOTER_ID"></div>
+                            <div class="col-md-4"><label class="form-label">ID Item/Number</label><input type="text"
+                                    class="form-control" ng-model="customer.identification.custIdentificationItem">
+                            </div>
+                            <div class="col-md-4"><label class="form-label">Effective Date (yyyy-MM-dd)</label><input
+                                    type="text" class="form-control" ng-model="customer.identification.effectiveDate"
+                                    placeholder="yyyy-MM-dd"></div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Addresses -->
+                    <div class="section-box border rounded p-3 mb-4 bg-light">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
+                            <h5 class="m-0 text-secondary">Customer Addresses</h5>
+                            <button type="button" class="btn btn-sm btn-outline-primary" ng-click="addAddress()">+ Add
+                                More Address</button>
+                        </div>
+                        <div ng-repeat="a in customer.customerAddresses"
+                            class="card shadow-sm p-3 mb-3 border-left-success bg-white">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="text-success small">Address #{{$index + 1}}</h6>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0"
+                                    ng-click="removeAddress($index)">Remove</button>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-3"><label class="small text-muted">Type</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="a.addressType"
+                                        placeholder="HOME/WORK"></div>
+                                <div class="col-md-6"><label class="small text-muted">Value</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="a.addressValue"
+                                        placeholder="Street, City, State"></div>
+                                <div class="col-md-3"><label class="small text-muted">Effective Date</label><input
+                                        type="text" class="form-control form-control-sm" ng-model="a.effectiveDate"
+                                        placeholder="yyyy-MM-dd"></div>
+                            </div>
+                        </div>
+                        <p ng-if="customer.customerAddresses.length === 0" class="text-center text-muted small my-2">No
+                            addresses added yet.</p>
+                    </div>
+
+                    <!-- 4. Contact Information -->
+                    <div class="section-box border rounded p-3 mb-4 bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
+                            <h5 class="m-0 text-secondary">Contact Information</h5>
+                            <button type="button" class="btn btn-sm btn-outline-success" ng-click="addContactInfo()">+
+                                Add More Contact</button>
+                        </div>
+                        <div ng-repeat="c in customer.customerContactInformations"
+                            class="card shadow-sm p-3 mb-3 border-left-info bg-light">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="text-info small">Contact #{{$index + 1}}</h6>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0"
+                                    ng-click="removeContactInfo($index)">Remove</button>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-3"><label class="small text-muted">Type</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="c.customerContactType"
+                                        placeholder="MOBILE/EMAIL"></div>
+                                <div class="col-md-5"><label class="small text-muted">Value</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="c.customerContactValue"
+                                        placeholder="Value"></div>
+                                <div class="col-md-2"><label class="small text-muted">Effective Date</label><input
+                                        type="text" class="form-control form-control-sm" ng-model="c.effectiveDate"
+                                        placeholder="yyyy-MM-dd"></div>
+                                <div class="col-md-1"><label class="small text-muted">Start</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="c.startDate"
+                                        placeholder="yyyy-MM-dd"></div>
+                                <div class="col-md-1"><label class="small text-muted">End</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="c.endDate"
+                                        placeholder="yyyy-MM-dd"></div>
+                            </div>
+                        </div>
+                        <p ng-if="customer.customerContactInformations.length === 0"
+                            class="text-center text-muted small my-2">No contact information added yet.</p>
+                    </div>
+
+                    <!-- 5. Proof of ID -->
+                    <div class="section-box border rounded p-3 mb-4 bg-light">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
+                            <h5 class="m-0 text-secondary">Proof of ID</h5>
+                            <button type="button" class="btn btn-sm btn-outline-info" ng-click="addProofOfId()">+ Add
+                                More Proof</button>
+                        </div>
+                        <div ng-repeat="p in customer.customerProofofIds"
+                            class="card shadow-sm p-3 mb-3 border-left-primary bg-white">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="text-primary small">Proof #{{$index + 1}}</h6>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0"
+                                    ng-click="removeProofOfId($index)">Remove</button>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-3"><label class="small text-muted">Type</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="p.proofofIdType"
+                                        placeholder="PAN/VOTER"></div>
+                                <div class="col-md-5"><label class="small text-muted">Value</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="p.proofofIdValue"
+                                        placeholder="Value"></div>
+                                <div class="col-md-2"><label class="small text-muted">Effective Date</label><input
+                                        type="text" class="form-control form-control-sm" ng-model="p.effectivDate"
+                                        placeholder="yyyy-MM-dd"></div>
+                                <div class="col-md-1"><label class="small text-muted">Start</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="p.startDate"
+                                        placeholder="yyyy-MM-dd"></div>
+                                <div class="col-md-1"><label class="small text-muted">End</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="p.endDate"
+                                        placeholder="yyyy-MM-dd"></div>
+                            </div>
+                        </div>
+                        <p ng-if="customer.customerProofofIds.length === 0" class="text-center text-muted small my-2">No
+                            proof of ID added yet.</p>
+                    </div>
+
+                    <!-- 6. Customer Names -->
+                    <div class="section-box border rounded p-3 mb-4 bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
+                            <h5 class="m-0 text-secondary">Customer Alternate Names</h5>
+                            <button type="button" class="btn btn-sm btn-outline-warning" ng-click="addCustomerName()">+
+                                Add More Name</button>
+                        </div>
+                        <div ng-repeat="n in customer.customerNames"
+                            class="card shadow-sm p-3 mb-3 border-left-warning bg-light">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="text-warning small">Name #{{$index + 1}}</h6>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0"
+                                    ng-click="removeCustomerName($index)">Remove</button>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-3"><label class="small text-muted">Type</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="n.customerNameType"
+                                        placeholder="ALIAS"></div>
+                                <div class="col-md-6"><label class="small text-muted">Value</label><input type="text"
+                                        class="form-control form-control-sm" ng-model="n.customerNameValue"
+                                        placeholder="Full Name"></div>
+                                <div class="col-md-3"><label class="small text-muted">Effective Date</label><input
+                                        type="text" class="form-control form-control-sm" ng-model="n.effectiveDate"
+                                        placeholder="yyyy-MM-dd"></div>
+                            </div>
+                        </div>
+                        <p ng-if="customer.customerNames.length === 0" class="text-center text-muted small my-2">No
+                            alternate names added yet.</p>
+                    </div>
+
+                    <div class="text-center mt-5 mb-4">
+                        <button type="button" class="btn btn-light btn-lg me-3 px-5 border shadow-sm"
+                            ng-click="resetUnifiedForm()">Reset Form</button>
+                        <button type="submit" class="btn btn-primary btn-lg px-5 shadow">Save Entire Customer
+                            Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- SECTION 2: INDIVIDUAL ENTITY ENTRIES -->
+        <div id="individual-section" ng-show="activeTab === 'individual'"
+            class="card p-4 border-dark shadow-sm bg-light animate-fade">
+            <h4 class="text-dark border-bottom pb-2 mb-4">Individual Entity Entry (Administrative)</h4>
+
+            <div class="row g-4">
+                <!-- 1. Classification -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white">Add Classification</div>
+                        <div class="card-body">
+                            <form ng-submit="submitClassification()">
+                                <div class="mb-2"><label class="form-label small">Type</label><input type="text"
+                                        class="form-control" ng-model="classification.customerClassificationType"
+                                        required></div>
+                                <div class="mb-2"><label class="form-label small">Value</label><input type="text"
+                                        class="form-control" ng-model="classification.customerClassificationValue"
+                                        required></div>
+                                <div class="mb-3"><label class="form-label small">Date (yyyy-MM-dd)</label><input
+                                        type="text" class="form-control" ng-model="classification.effectiveDate"
+                                        placeholder="yyyy-MM-dd" required></div>
+                                <button type="submit" class="btn btn-primary w-100">Submit Classification</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Address -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-success text-white">Add Address</div>
+                        <div class="card-body">
+                            <form ng-submit="submitAddress()">
+                                <div class="row g-2 mb-2">
+                                    <div class="col"><label class="form-label small">Cust ID</label><input type="number"
+                                            class="form-control" ng-model="address.custId" required></div>
+                                    <div class="col"><label class="form-label small">Class ID</label><input
+                                            type="number" class="form-control"
+                                            ng-model="address.customerClassificationId" required></div>
+                                </div>
+                                <div class="mb-2"><label class="form-label small">Type</label><input type="text"
+                                        class="form-control" ng-model="address.addressType" required></div>
+                                <div class="mb-2"><label class="form-label small">Value</label><input type="text"
+                                        class="form-control" ng-model="address.addressValue" required></div>
+                                <div class="mb-3"><label class="form-label small">Effective Date</label><input
+                                        type="text" class="form-control" ng-model="address.effectiveDate"
+                                        placeholder="yyyy-MM-dd" required></div>
+                                <button type="submit" class="btn btn-success w-100">Submit Address</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Proof of ID -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-info ">Add Proof of ID</div>
+                        <div class="card-body">
+                            <form ng-submit="submitProof()">
+                                <div class="mb-2"><label class="form-label small">Cust ID</label><input type="number"
+                                        class="form-control" ng-model="proof.custId" required></div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col"><label class="form-label small">Type</label><input type="text"
+                                            class="form-control" ng-model="proof.proofofIdType" required></div>
+                                    <div class="col"><label class="form-label small">Value</label><input type="text"
+                                            class="form-control" ng-model="proof.proofofIdValue" required></div>
+                                </div>
+                                <div class="mb-2"><label class="form-label small">Effective Date</label><input
+                                        type="text" class="form-control" ng-model="proof.effectivDate"
+                                        placeholder="yyyy-MM-dd" required></div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col"><label class="form-label small">Start Date</label><input
+                                            type="text" class="form-control" ng-model="proof.startDate"
+                                            placeholder="yyyy-MM-dd"></div>
+                                    <div class="col"><label class="form-label small">End Date</label><input type="text"
+                                            class="form-control" ng-model="proof.endDate" placeholder="yyyy-MM-dd">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info w-100">Submit Proof of ID</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Names -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-warning">Add Profile Name</div>
+                        <div class="card-body">
+                            <form ng-submit="submitName()">
+                                <div class="row g-2 mb-2">
+                                    <div class="col"><label class="form-label small">Cust ID</label><input type="number"
+                                            class="form-control" ng-model="nameEntry.custId" required></div>
+                                    <div class="col"><label class="form-label small">Class ID</label><input
+                                            type="number" class="form-control" ng-model="nameEntry.classificationId"
+                                            required></div>
+                                </div>
+                                <div class="mb-2"><label class="form-label small">Type</label><input type="text"
+                                        class="form-control" ng-model="nameEntry.customerNameType" required></div>
+                                <div class="mb-2"><label class="form-label small">Value</label><input type="text"
+                                        class="form-control" ng-model="nameEntry.customerNameValue" required></div>
+                                <div class="mb-3"><label class="form-label small">Effective Date</label><input
+                                        type="text" class="form-control" ng-model="nameEntry.effectiveDate"
+                                        placeholder="yyyy-MM-dd" required></div>
+                                <button type="submit" class="btn btn-warning w-100">Submit Name</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Identification (USE individualIdent) -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-dark text-white">Add Identification</div>
+                        <div class="card-body">
+                            <form ng-submit="submitIdent()">
+                                <div class="mb-2"><label class="form-label small">Customer Detail ID</label><input
+                                        type="number" class="form-control" ng-model="individualIdent.custId" required
+                                        placeholder="Enter existing Customer ID"></div>
+                                <div class="mb-2"><label class="form-label small">Identification Type</label><input
+                                        type="text" class="form-control"
+                                        ng-model="individualIdent.custIdentificationtype" required
+                                        placeholder="e.g. PASSPORT"></div>
+                                <div class="mb-2"><label class="form-label small">Identification
+                                        Item/Value</label><input type="text" class="form-control"
+                                        ng-model="individualIdent.custIdentificationItem" required></div>
+                                <div class="mb-3"><label class="form-label small">Effective Date</label><input
+                                        type="text" class="form-control" ng-model="individualIdent.effectiveDate"
+                                        placeholder="yyyy-MM-dd" required></div>
+                                <button type="submit" class="btn btn-dark w-100">Submit Identification</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Contact Info -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-danger text-white">Add Contact Info</div>
+                        <div class="card-body">
+                            <form ng-submit="submitContact()">
+                                <div class="mb-2"><label class="form-label small">Cust ID</label><input type="number"
+                                        class="form-control" ng-model="contact.custId" required></div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col"><label class="form-label small">Type</label><input type="text"
+                                            class="form-control" ng-model="contact.customerContactType" required></div>
+                                    <div class="col"><label class="form-label small">Value</label><input type="text"
+                                            class="form-control" ng-model="contact.customerContactValue" required></div>
+                                </div>
+                                <div class="mb-2"><label class="form-label small">Effective Date</label><input
+                                        type="text" class="form-control" ng-model="contact.effectiveDate"
+                                        placeholder="yyyy-MM-dd" required></div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col"><label class="form-label small">Start Date</label><input
+                                            type="text" class="form-control" ng-model="contact.startDate"
+                                            placeholder="yyyy-MM-dd"></div>
+                                    <div class="col"><label class="form-label small">End Date</label><input type="text"
+                                            class="form-control" ng-model="contact.endDate" placeholder="yyyy-MM-dd">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-danger w-100">Submit Contact Info</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: DELETE CENTER -->
+        <div id="delete-section" ng-show="activeTab === 'delete'" class="animate-fade">
+            <div class="alert alert-danger shadow-sm mb-4 border-0 bg-danger bg-opacity-10 text-danger">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i> 
+                <strong>Important:</strong> Deletion results in a soft-delete (marked 'D'). Once removed, records 
+                will no longer appear in active screens.
+            </div>
+
+            <div class="row g-4 mb-5">
+                <!-- Customer Detail Card -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 border-top border-danger border-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger mb-3"><i class="bi bi-person-fill text-dark opacity-50 me-2"></i>Customer Detail</h5>
+                            <p class="card-text small text-muted">Remove a full profile record using its system identifier.</p>
+                            <form ng-submit="quickDelete('customers', delIds.customers)">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="delIds.customers" placeholder="ID #">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Classification Card -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 border-top border-danger border-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger mb-3"><i class="bi bi-tag-fill text-dark opacity-50 me-2"></i>Classification</h5>
+                            <p class="card-text small text-muted">Remove a classification record and its properties.</p>
+                            <form ng-submit="quickDelete('classification', delIds.classification)">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="delIds.classification" placeholder="ID #">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Card -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 border-top border-danger border-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger mb-3"><i class="bi bi-geo-alt-fill text-dark opacity-50 me-2"></i>Address</h5>
+                            <p class="card-text small text-muted">Remove a specific residential or work address entry.</p>
+                            <form ng-submit="quickDelete('address', delIds.address)">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="delIds.address" placeholder="ID #">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proof of ID Card -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 border-top border-danger border-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger mb-3"><i class="bi bi-file-earmark-person-fill text-dark opacity-50 me-2"></i>Proof of ID</h5>
+                            <p class="card-text small text-muted">Delete verification proof documents (e.g. PAN card).</p>
+                            <form ng-submit="quickDelete('proof', delIds.proof)">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="delIds.proof" placeholder="ID #">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alternate Name Card -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 border-top border-danger border-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger mb-3"><i class="bi bi-alphabet-uppercase text-dark opacity-50 me-2"></i>Alternate Name</h5>
+                            <p class="card-text small text-muted">Remove secondary or alias name records.</p>
+                            <form ng-submit="quickDelete('customernames', delIds.customernames)">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="delIds.customernames" placeholder="ID #">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identification Card -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 border-top border-danger border-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger mb-3"><i class="bi bi-id-card-fill text-dark opacity-50 me-2"></i>Identification</h5>
+                            <p class="card-text small text-muted">Delete primary identification numbers (e.g. Voter ID).</p>
+                            <form ng-submit="quickDelete('identification', delIds.identification)">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="delIds.identification" placeholder="ID #">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Info Card -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 border-top border-danger border-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger mb-3"><i class="bi bi-telephone-fill text-dark opacity-50 me-2"></i>Contact Info</h5>
+                            <p class="card-text small text-muted">Remove phone numbers or email addresses.</p>
+                            <form ng-submit="quickDelete('contactinfo', delIds.contactinfo)">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="delIds.contactinfo" placeholder="ID #">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<style>
+    .section-box {
+        transition: all 0.3s ease;
+    }
+
+    .section-box:hover {
+        border-color: #007bff !important;
+    }
+
+    .border-left-success {
+        border-left: 5px solid #28a745 !important;
+    }
+
+    .border-left-info {
+        border-left: 5px solid #17a2b8 !important;
+    }
+
+    .border-left-primary {
+        border-left: 5px solid #007bff !important;
+    }
+
+    .border-left-warning {
+        border-left: 5px solid #ffc107 !important;
+    }
+
+    .animate-fade {
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

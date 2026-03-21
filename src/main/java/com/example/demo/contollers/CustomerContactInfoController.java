@@ -17,7 +17,7 @@ public class CustomerContactInfoController {
     private CustomerContactInfoService service;
 
     @PostMapping
-    public ResponseEntity<custContactInfoDTO> add(@RequestBody custContactInfoDTO dto) {
+    public ResponseEntity<?> add(@RequestBody custContactInfoDTO dto) {
         return service.add(dto);
     }
 

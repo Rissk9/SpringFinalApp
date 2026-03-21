@@ -17,10 +17,10 @@ import com.example.demo.DTO.custAddressDTO;
 import com.example.demo.service.CustomerAddressService;
 
 @RestController
-@RequestMapping("api/address")
+@RequestMapping("/api/address")
 public class CustomerAddressController {
 
-	@Autowired
+    @Autowired
     private CustomerAddressService service;
 
     @PostMapping
@@ -39,7 +39,7 @@ public class CustomerAddressController {
             @RequestBody custAddressDTO dto) {
         return service.update(id, dto);
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(
             @PathVariable Long id) {
