@@ -25,6 +25,20 @@ public class CustomerDetailController {
 
 	@Autowired
 	CustomerDetailsService custDetailService;
+
+	@Autowired
+	private com.example.demo.serviceImpl.CustomerBulkService customerBulkService;
+
+	@PostMapping("/upload")
+	public ResponseEntity<?> uploadCustomers(@org.springframework.web.bind.annotation.RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+	    List<String> errors = customerBulkService.processFile(file);
+
+	    if (errors.isEmpty()) {
+	        return ResponseEntity.ok("Bulk upload successful");
+	    } else {
+	        return ResponseEntity.status(207).body(errors);
+	    }
+	}
 	
 	@PostMapping
 	public ResponseEntity<?> addCustomer(

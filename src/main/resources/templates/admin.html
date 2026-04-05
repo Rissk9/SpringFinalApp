@@ -62,6 +62,44 @@
             <h1 style="margin: 0;">Customer Details Administration</h1>
             <a href="/" class="btn-back">Back to Home</a>
         </div>
+
+        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; background-color: #f9f9f9; border-radius: 5px;">
+            <h3 style="margin-top: 0; color: #333;">Bulk Upload Customers</h3>
+            <form id="bulkUploadForm">
+                <input type="file" id="excelFile" name="file" accept=".xlsx, .xls" required style="margin-right: 10px; padding: 5px;">
+                <button type="submit" style="padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Upload Excel</button>
+            </form>
+            <script>
+                document.getElementById('bulkUploadForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var fileInput = document.getElementById('excelFile');
+                    var formData = new FormData();
+                    formData.append('file', fileInput.files[0]);
+                    
+                    fetch('/api/customers/upload', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.status === 200) {
+                            alert('Bulk upload successful!');
+                            window.location.reload();
+                        } else if (response.status === 207) {
+                            return response.json().then(errs => {
+                                alert('Upload finished with errors:\\n' + errs.slice(0,5).join('\\n'));
+                                window.location.reload();
+                            });
+                        } else {
+                            alert('Upload failed with status ' + response.status);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Upload error');
+                    });
+                });
+            </script>
+        </div>
         <table>
             <thead>
                 <tr>

@@ -181,7 +181,38 @@ app.controller('UserController', function ($scope, $http) {
 
 });
 
-app.controller('AdminController', function ($scope) {
+app.controller('AdminController', function ($scope, $http) {
     $scope.message = "Admin Side - Work in Progress (Individual entries moved to User Side)";
-});
 
+    $scope.uploadExcel = function() {
+        var fileInput = document.getElementById('excelFile');
+        if (!fileInput.files.length) {
+            alert("Please select an Excel file first.");
+            return;
+        }
+
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+
+        $http.post('/api/customers/upload', formData, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        }).then(function(res) {
+            alert(res.data || 'Bulk upload successful!');
+            fileInput.value = ''; // Clear file selection
+        }).catch(function(err) {
+            console.error("Bulk Upload Error:", err);
+            
+            // Handle HTTP 207 Multi-Status (Some failed lines)
+            if (err.status === 207 && err.data && err.data.length > 0) {
+                alert("Upload finished with errors:\n\n" + 
+                      err.data.slice(0, 5).join("\n") + 
+                      (err.data.length > 5 ? "\n...and " + (err.data.length - 5) + " more" : ""));
+            } else {
+                alert("Failed to upload the file. Please trace the error in the console.");
+            }
+            fileInput.value = '';
+        });
+    };
+});
