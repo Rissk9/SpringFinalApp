@@ -1,5 +1,3 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/hwHQpd-p)
 
-this project that i ave submitted contains all the tables as mentioned along with the right reverse engineered ER diagram and fully functioning apis.
-
-please look into it
+This contains the Final Spring Application thats deployed in the Azure cloud
